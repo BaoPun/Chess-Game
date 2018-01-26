@@ -18,6 +18,8 @@ class Piece{
 		Piece();
 		int getHorizontal();
 		int getVertical();
+		char getImage();
+		int getPlayer();
 		void setImage(char);
 		void setHorizontal(int);
 		void setVertical(int);

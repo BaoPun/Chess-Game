@@ -18,7 +18,12 @@ class Player{
 		King king;
 	public:
 		Player();
-
+		Pawn initializePawn(int, int, int, char); //all the pieces' parameters: player #, x coordinate, y coordinate, character representation
+		Rook initializeRook(int, int, int, char);
+		Bishop initializeBishop(int, int, int, char);
+		Knight initializeKnight(int, int, int, char);
+		Queen initializeQueen(int, int, int, char);
+		King initializeKing(int, int, int, char);
 };
 
 #endif

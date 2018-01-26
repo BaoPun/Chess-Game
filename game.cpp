@@ -3,3 +3,7 @@
 Game::Game(){
 	
 }
+
+void Game::displayBoard(){
+	chess.displayBoard();
+}

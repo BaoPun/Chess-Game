@@ -1,15 +1,15 @@
 #include "./pawn.h"
 
 Pawn::Pawn(){
-	
+	first = false; //initially set to false, make it true once pawn makes move
 }
 
-void Pawn::initializeX(){
-	x = firstX;
+void Pawn::initializeX(int a){
+	firstX = a;
 }
 
-void Pawn::initializeY(){
-	y = firstY;
+void Pawn::initializeY(int b){
+	firstY = b;
 }
 
 bool Pawn::firstMove(int a, int b){
