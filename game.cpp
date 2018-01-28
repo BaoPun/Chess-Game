@@ -51,7 +51,7 @@ int Game::firstTurn(){
 }
 
 void Game::play(){
-	int turnCount = firstTurn();
+	int turnPlayer = firstTurn();
 	int pickX, pickY, moveX, moveY;
 	bool valid;
 	//chess.initializeBoard(); //temporary
@@ -63,7 +63,7 @@ void Game::play(){
 		cout << " - Knights represent L" << endl;
 		cout << " - Queen represents Q" << endl;
 		cout << " - King represents K" << endl;
-		cout << "It is player " << turnCount << "'s turn to make a move!" << endl;
+		cout << "It is player " << turnPlayer << "'s turn to make a move!" << endl;
 		displayBoard();
 		valid = false;
 		while(valid == false){
@@ -73,7 +73,7 @@ void Game::play(){
 				cout << "Please do not go out of bounds, choose your coordinates again (x (0-7), y (0-7))" << endl << ":";
 				cin >> pickX >> pickY;
 			}
-			if(chess.checkValidMovement(turnCount, pickX, pickY))
+			if(chess.checkValidMovement(turnPlayer, pickX, pickY))
 				valid = true;
 			else
 				cout << "This piece cannot move anywhere, please pick another piece" << endl;
@@ -93,10 +93,11 @@ void Game::play(){
 		cin >> continuing;
 		if(continuing != 1)
 			break;
-		if(turnCount == 1)
-			turnCount++;
+		if(turnPlayer == 1)
+			turnPlayer++;
 		else
-			turnCount = 1;
+			turnPlayer = 1;
 		system("clear");
 	}
+	cout << "Thanks for playing!" << endl;
 }
