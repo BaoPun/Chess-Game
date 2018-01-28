@@ -4,36 +4,37 @@ Player::Player(){
 
 }
 
-Pawn Player::initializePawn(int p, int x, int y, char i){
-	pawn.setPlayer(p);
-	pawn.setHorizontal(x);
-	pawn.setVertical(y);
-	pawn.setImage(i);
-	return pawn;
+Pawn Player::initializePawn(int k, int p, int x, int y, char i){
+	pawn[k].setPlayer(p);
+	pawn[k].setHorizontal(x);
+	pawn[k].setVertical(y);
+	pawn[k].setImage(i);
+	pawn[k].setID(k + 1);
+	return pawn[k];
 }
 
-Rook Player::initializeRook(int p, int x, int y, char i){
-	rook.setPlayer(p);
-	rook.setHorizontal(x);
-	rook.setVertical(y);
-	rook.setImage(i);
-	return rook;
+Rook Player::initializeRook(int k, int p, int x, int y, char i){
+	rook[k].setPlayer(p);
+	rook[k].setHorizontal(x);
+	rook[k].setVertical(y);
+	rook[k].setImage(i);
+	return rook[k];
 }
 
-Bishop Player::initializeBishop(int p, int x, int y, char i){
-	bishop.setPlayer(p);
-	bishop.setHorizontal(x);
-	bishop.setVertical(y);
-	bishop.setImage(i);
-	return bishop;
+Bishop Player::initializeBishop(int k, int p, int x, int y, char i){
+	bishop[k].setPlayer(p);
+	bishop[k].setHorizontal(x);
+	bishop[k].setVertical(y);
+	bishop[k].setImage(i);
+	return bishop[k];
 }
 
-Knight Player::initializeKnight(int p, int x, int y, char i){
-	knight.setPlayer(p);
-	knight.setHorizontal(x);
-	knight.setVertical(y);
-	knight.setImage(i);
-	return knight;
+Knight Player::initializeKnight(int k, int p, int x, int y, char i){
+	knight[k].setPlayer(p);
+	knight[k].setHorizontal(x);
+	knight[k].setVertical(y);
+	knight[k].setImage(i);
+	return knight[k];
 }
 
 Queen Player::initializeQueen(int p, int x, int y, char i){
@@ -50,4 +51,8 @@ King Player::initializeKing(int p, int x, int y, char i){
 	king.setVertical(y);
 	king.setImage(i);
 	return king;
+}
+
+bool Player::pawnFirstMove(int i){
+	return pawn[i - 1].firstMove();
 }

@@ -4,14 +4,10 @@ Pawn::Pawn(){
 	first = false; //initially set to false, make it true once pawn makes move
 }
 
-void Pawn::initializeX(int a){
-	firstX = a;
-}
-
-void Pawn::initializeY(int b){
-	firstY = b;
-}
-
-bool Pawn::firstMove(int a, int b){
-	return (firstX == a && firstY == b);
+bool Pawn::firstMove(){
+	if(first == false){ //if the pawn hasn't made its first move, now change first to true and return true
+		first = true;
+		return first;
+	}
+	return false;
 }

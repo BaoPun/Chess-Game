@@ -10,20 +10,21 @@
 
 class Player{
 	private:
-		Pawn pawn;
-		Rook rook;
-		Bishop bishop;
-		Knight knight;
+		Pawn pawn[8];
+		Rook rook[2];
+		Bishop bishop[2];
+		Knight knight[2];
 		Queen queen;
 		King king;
 	public:
 		Player();
-		Pawn initializePawn(int, int, int, char); //all the pieces' parameters: player #, x coordinate, y coordinate, character representation
-		Rook initializeRook(int, int, int, char);
-		Bishop initializeBishop(int, int, int, char);
-		Knight initializeKnight(int, int, int, char);
+		Pawn initializePawn(int, int, int, int, char); //all the pieces' parameters: piece id #, player #, x coordinate, y coordinate, character representation
+		Rook initializeRook(int, int, int, int, char);
+		Bishop initializeBishop(int, int, int, int, char);
+		Knight initializeKnight(int, int, int, int, char);
 		Queen initializeQueen(int, int, int, char);
 		King initializeKing(int, int, int, char);
+		bool pawnFirstMove(int); //based on the id of the pawn, determine if the pawn has made its move yet
 };
 
 #endif

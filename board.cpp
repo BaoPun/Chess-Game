@@ -1,51 +1,20 @@
 #include "./board.h"
 
 Board::Board(){
-	//initialize entire chessboard
-	cout << "Chess codings: " << endl;
-	cout << " - Pawns either represent 1 or 2 (player #)" << endl;
-	cout << " - Rooks represent R" << endl;
-	cout << " - Bishops represent B" << endl;
-	cout << " - Knights represent L" << endl;
-	cout << " - Queen represents Q" << endl;
-	cout << " - King represents K" << endl;
-	
-	//player 1 first
-	//pawns
-	for(int i = 0; i < 8; i++)
-		chessboard[6][i] = player[0].initializePawn(1, 6, i, 'P');
-	//rooks
-	chessboard[7][0] = player[0].initializeRook(1, 7, 0, 'R');
-	chessboard[7][7] = player[0].initializeRook(1, 7, 7, 'R');
-	//bishops
-	chessboard[7][1] = player[0].initializeBishop(1, 7, 1, 'B');
-	chessboard[7][6] = player[0].initializeBishop(1, 7, 6, 'B');
-	//knight
-	chessboard[7][2] = player[0].initializeKnight(1, 7, 2, 'L');
-	chessboard[7][5] = player[0].initializeKnight(1, 7, 5, 'L');
-	//queen
-	chessboard[7][3] = player[0].initializeQueen(1, 7, 3, 'Q');
-	//king
-	chessboard[7][4] = player[0].initializeKing(1, 7, 4, 'K');
-	
-	//player 2 now
-	//pawns
-	for(int i = 0; i < 8; i++)
-		chessboard[1][i] = player[1].initializePawn(2, 1, i, 'P');
-	//rooks
-	chessboard[0][0] = player[0].initializeRook(2, 0, 0, 'R');
-	chessboard[0][7] = player[0].initializeRook(2, 0, 7, 'R');
-	//bishops
-	chessboard[0][1] = player[0].initializeBishop(2, 0, 1, 'B');
-	chessboard[0][6] = player[0].initializeBishop(2, 0, 6, 'B');
-	//knight
-	chessboard[0][2] = player[0].initializeKnight(2, 0, 2, 'L');
-	chessboard[0][5] = player[0].initializeKnight(2, 0, 5, 'L');
-	//queen
-	chessboard[0][4] = player[0].initializeQueen(2, 0, 3, 'Q');
-	//king
-	chessboard[0][3] = player[0].initializeKing(2, 0, 4, 'K');
-	
+	//rest of the board:
+	for(int i = 2; i < 6; i++){
+		for(int j = 0; j < 8; j++){
+			chessboard[i][j].setPlayer(0);
+			chessboard[i][j].setImage('_');
+			chessboard[i][j].setHorizontal(i);
+			chessboard[i][j].setVertical(j);
+			chessboard[i][j].setID(0);
+		}
+	}
+}
+
+void Board::setBoardArea(Piece p, int a, int b){
+	chessboard[a][b] = p;
 }
 
 void Board::displayBoard(){
@@ -64,4 +33,280 @@ void Board::displayBoard(){
 		}
 		cout << endl;
 	}
+	cout << endl;
+}
+
+bool Board::chooseValidPiece(int player, int a, int b){
+	return (chessboard[a][b].getPlayer() == player);
+}
+
+bool Board::checkValidMovement(int p, int a, int b){
+	int pawnID, rookID, bishopID, knightID;
+	if(!chooseValidPiece(p, a, b))
+		return false;
+	else{
+		//retrieve the piece that was selected, and then check to see if that piece can move at any valid spot on the map
+		char piece = chessboard[a][b].getImage();
+		switch(piece){
+			case 'P':
+				//if the selected pawn hasn't moved yet
+				//pawnID = chessboard[a][b].getID(); //this can be dealt with in another function, just keeping it here for now
+				/*if(player[p - 1].pawnFirstMove(pawnID))
+					return true;*/
+				//determine which player is moving the pawn
+				return pawnCanMove(p, a, b);
+			case 'R':
+				return rookCanMove(p, a, b);
+			case 'B':
+				return bishopCanMove(p, a, b);
+			case 'L':
+			
+				return true;
+			case 'Q':
+				return queenCanMove(p, a, b);
+			case 'K':
+				return queenCanMove(p, a, b);
+		}
+		return true; 
+	}
+}
+
+bool Board::pawnCanMove(int p, int a, int b){
+	//determine which player is moving the pawn
+	if(p == 1){ //player 1
+		if(chessboard[a - 1][b].getImage() == '_')
+			return true;
+		else{
+			if(b != 0 && b != 7) //pawn is NOT on edge, check the upper diagonals for the existence of an enemy piece
+				return (chessboard[a - 1][b - 1].getPlayer() == 2 || chessboard[a - 1][b + 1].getPlayer() == 2);
+			else if(b == 0)
+				return (chessboard[a - 1][b + 1].getPlayer() == 2);
+			else if(b == 7)
+				return (chessboard[a - 1][b - 1].getPlayer() == 2);
+			else
+				return false;
+		}
+	}
+	else{ //player 2
+		if(chessboard[a + 1][b].getImage() == '_')
+			return true;
+		else{
+			if(b != 0 && b != 7) //pawn is NOT on edge, check the upper diagonals for the existence of an enemy piece
+				return (chessboard[a + 1][b - 1].getPlayer() == 1 || chessboard[a + 1][b + 1].getPlayer() == 1);
+			else if(b == 0)
+				return (chessboard[a + 1][b + 1].getPlayer() == 1);
+			else if(b == 7)
+				return (chessboard[a + 1][b - 1].getPlayer() == 1);
+			else
+				return false;
+		}
+	}
+}
+
+bool Board::rookCanMove(int p, int a, int b){
+	//9 cases: 4 cases on corners, 4 cases on edges not including corners, 1 case anywhere else not mentioned
+	//corner locations
+	if(a == 0 && b == 0){ //top left 
+		//check spot downwards and to the right
+		if(chessboard[a + 1][b].getImage() == '_' || chessboard[a][b + 1].getImage() == '_')
+			return true;
+		else{
+			if(chessboard[a + 1][b].getPlayer() != p || chessboard[a][b + 1].getPlayer() != p)
+				return true;
+			return false;
+		}
+	}
+	else if(a == 0 && b == 7){ //top right
+		//check spot downwards and to the left
+		if(chessboard[a + 1][b].getImage() == '_' || chessboard[a][b - 1].getImage() == '_')
+			return true;
+		else{
+			if(chessboard[a + 1][b].getPlayer() != p || chessboard[a][b - 1].getPlayer() != p)
+				return true;
+			return false;
+		}
+	}
+	else if(a == 7 && b == 0){ //bottom left
+		//check spot upwards and to the right
+		if(chessboard[a - 1][b].getImage() == '_' || chessboard[a][b + 1].getImage() == '_')
+			return true;
+		else{
+			if(chessboard[a - 1][b].getPlayer() != p || chessboard[a][b + 1].getPlayer() != p)
+				return true;
+			return false;
+		}
+	}
+	else if(a == 7 && b == 7){ //bottom right
+		//check spot upwards and to the left
+		if(chessboard[a - 1][b].getImage() == '_' || chessboard[a][b - 1].getImage() == '_')
+			return true;
+		else{
+			if(chessboard[a - 1][b].getPlayer() != p || chessboard[a][b - 1].getPlayer() != p)
+				return true;
+			return false;
+		}
+	}
+	//on edge (not including corners)
+	else if(a == 0){ //somewhere in top edge 
+		//check to the left, to the right, and downwards
+		if(chessboard[a][b - 1].getImage() == '_' || chessboard[a][b + 1].getImage() == '_' || chessboard[a + 1][b].getImage() == '_')
+			return true;
+		else{
+			if(chessboard[a][b - 1].getPlayer() != p || chessboard[a][b + 1].getPlayer() != p || chessboard[a + 1][b].getPlayer() != p)
+				return true;
+			return false;
+		}
+	}
+	else if(a == 7){ //somewhere in bottom edge
+		//check to the left, to the right, and upwards
+		if(chessboard[a][b - 1].getImage() == '_' || chessboard[a][b + 1].getImage() == '_' || chessboard[a - 1][b].getImage() == '_')
+			return true;
+		else{
+			if(chessboard[a][b - 1].getPlayer() != p || chessboard[a][b + 1].getPlayer() != p || chessboard[a - 1][b].getPlayer() != p)
+				return true;
+			return false;
+		}
+	} 
+	else if(b == 0){ //somewhere in left edge
+		//check upwards, downwards, and to the right
+		if(chessboard[a - 1][b].getImage() == '_' || chessboard[a + 1][b].getImage() == '_' || chessboard[a][b + 1].getImage() == '_')
+			return true;
+		else{
+			if(chessboard[a - 1][b].getPlayer() != p || chessboard[a + 1][b].getPlayer() != p || chessboard[a][b + 1].getPlayer() != p)
+				return true;
+			return false;
+		}
+	}
+	else if(b == 7){ //somewhere in right edge
+		//check upwards, downwards, and to the left
+		if(chessboard[a - 1][b].getImage() == '_' || chessboard[a + 1][b].getImage() == '_' || chessboard[a][b - 1].getImage() == '_')
+			return true;
+		else{
+			if(chessboard[a - 1][b].getPlayer() != p || chessboard[a + 1][b].getPlayer() != p || chessboard[a][b - 1].getPlayer() != p)
+				return true;
+			return false;
+		}
+	}
+	//everywhere else
+	else{
+		//all 4 directions combined
+		if(chessboard[a - 1][b].getImage() == '_' || chessboard[a + 1][b].getImage() == '_' || chessboard[a][b - 1].getImage() == '_' || chessboard[a][b + 1].getImage() == '_')
+			return true;
+		else{
+			if(chessboard[a - 1][b].getPlayer() != p || chessboard[a + 1][b].getPlayer() != p || chessboard[a][b - 1].getPlayer() != p || chessboard[a][b + 1].getPlayer() != p)
+				return true;
+			return false;
+		}
+	}
+}
+
+bool Board::knightCanMove(int p, int a, int b){
+	//8 possibilities
+}
+
+bool Board::bishopCanMove(int p, int a, int b){
+	//9 cases: 4 cases on corners, 4 cases on edges not including corners, 1 case anywhere else not mentioned
+	//corner locations
+	if(a == 0 && b == 0){ //top left 
+		//check diagonally to bottom right
+		if(chessboard[a + 1][b + 1].getImage() == '_')
+			return true;
+		else{
+			if(chessboard[a + 1][b + 1].getPlayer() != p)
+				return true;
+			return false;
+		}
+	}
+	else if(a == 0 && b == 7){ //top right
+		//check diagonally to bottom left
+		if(chessboard[a + 1][b - 1].getImage() == '_')
+			return true;
+		else{
+			if(chessboard[a + 1][b - 1].getPlayer() != p)
+				return true;
+			return false;
+		}
+	}
+	else if(a == 7 && b == 0){ //bottom left
+		//check diagonally to top right
+		if(chessboard[a - 1][b + 1].getImage() == '_')
+			return true;
+		else{
+			if(chessboard[a - 1][b + 1].getPlayer() != p)
+				return true;
+			return false;
+		}
+	}
+	else if(a == 7 && b == 7){ //bottom right
+		//check diagonally to top left
+		if(chessboard[a - 1][b - 1].getImage() == '_')
+			return true;
+		else{
+			if(chessboard[a - 1][b - 1].getPlayer() != p)
+				return true;
+			return false;
+		}
+	}
+	//on edge (not including corners)
+	else if(a == 0){ //somewhere in top edge 
+		//check diagonally to bottom left and bottom right
+		if(chessboard[a + 1][b - 1].getImage() == '_' || chessboard[a + 1][b + 1].getImage() == '_')
+			return true;
+		else{
+			if(chessboard[a + 1][b - 1].getPlayer() != p || chessboard[a + 1][b + 1].getPlayer() != p)
+				return true;
+			return false;
+		}
+	}
+	else if(a == 7){ //somewhere in bottom edge
+		//check diagonally to upper left and upper right
+		if(chessboard[a - 1][b - 1].getImage() == '_' || chessboard[a - 1][b + 1].getImage() == '_')
+			return true;
+		else{
+			if(chessboard[a - 1][b - 1].getPlayer() != p || chessboard[a - 1][b + 1].getPlayer() != p)
+				return true;
+			return false;
+		}
+	} 
+	else if(b == 0){ //somewhere in left edge
+		//check diagonally to upper right and lower right
+		if(chessboard[a - 1][b + 1].getImage() == '_' || chessboard[a + 1][b + 1].getImage() == '_')
+			return true;
+		else{
+			if(chessboard[a - 1][b + 1].getPlayer() != p || chessboard[a + 1][b + 1].getPlayer() != p)
+				return true;
+			return false;
+		}
+	}
+	else if(b == 7){ //somewhere in right edge
+		//check diagonally to upper left and bottom left
+		if(chessboard[a - 1][b - 1].getImage() == '_' || chessboard[a + 1][b - 1].getImage() == '_')
+			return true;
+		else{
+			if(chessboard[a - 1][b - 1].getPlayer() != p || chessboard[a + 1][b - 1].getPlayer() != p)
+				return true;
+			return false;
+		}
+	}
+	//everywhere else
+	else{
+		//all 4 directions combined
+		if(chessboard[a - 1][b - 1].getImage() == '_' || chessboard[a - 1][b + 1].getImage() == '_' || chessboard[a + 1][b - 1].getImage() == '_' || chessboard[a + 1][b + 1].getImage() == '_')
+			return true;
+		else{
+			if(chessboard[a - 1][b - 1].getPlayer() != p || chessboard[a - 1][b + 1].getPlayer() != p || chessboard[a + 1][b - 1].getPlayer() != p || chessboard[a + 1][b + 1].getPlayer() != p)
+				return true;
+			return false;
+		}
+	}
+}
+
+bool Board::queenCanMove(int p, int a, int b){
+	//both rookCanMove and bishopCanMove combined here
+	return (rookCanMove(p, a, b) || bishopCanMove(p, a, b));
+}
+
+bool Board::kingCanMove(int p, int a, int b){
+	//checking 1 spot all around, same condition as queenCanMove
+	return queenCanMove(p, a, b);
 }
