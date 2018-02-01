@@ -56,3 +56,7 @@ King Player::initializeKing(int p, int x, int y, char i){
 bool Player::pawnFirstMove(int i){
 	return pawn[i - 1].firstMove();
 }
+
+void Player::changeFirstStatus(int i){
+	pawn[i - 1].changeFirstStatus();
+}

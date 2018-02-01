@@ -5,9 +5,9 @@ Pawn::Pawn(){
 }
 
 bool Pawn::firstMove(){
-	if(first == false){ //if the pawn hasn't made its first move, now change first to true and return true
-		first = true;
-		return first;
-	}
-	return false;
+	return (first == false);
+}
+
+void Pawn::changeFirstStatus(){
+	first = true;
 }

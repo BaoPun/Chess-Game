@@ -67,7 +67,7 @@ void Game::play(){
 		displayBoard();
 		valid = false;
 		while(valid == false){
-			cout << "Choose a piece to move, by choosing its coordinates (x (0-7), y (0-7))" << endl << ":";
+			cout << "Choose a piece to move, by inputting its coordinates (x (0-7), y (0-7))" << endl << ":";
 			cin >> pickX >> pickY;
 			while(pickX > 7 || pickX < 0 || pickY > 7 || pickY < 0){
 				cout << "Please do not go out of bounds, choose your coordinates again (x (0-7), y (0-7))" << endl << ":";
@@ -76,15 +76,248 @@ void Game::play(){
 			if(chess.checkValidMovement(turnPlayer, pickX, pickY))
 				valid = true;
 			else
-				cout << "This piece cannot move anywhere, please pick another piece" << endl;
+				cout << "This piece either does not belong to you, or it cannot move anywhere based on its location.  Please pick another piece" << endl;
 		}
 		valid = false;
 		while(valid == false){
 			cout << "Where would you like to move your piece?" << endl << ":";
 			cin >> moveX >> moveY;
-			
-			
-			valid = true;
+			switch(chess.getChessPiece(pickX, pickY)){
+				case 'P':
+					if(turnPlayer == 1){ //player 1
+						if(player[0].pawnFirstMove(chess.getPieceID(pickX, pickY))){ //a selected pawn's first move
+							if(moveX == pickX - 2 && moveY == pickY){  //check the space right in front of the pawn first
+								if(chess.getChessPiece(pickX - 1, pickY) != '_'){
+									cout << "Your pawn cannot move to that coordinate, please try again" << endl;
+									valid = false;
+								}				
+								else{ //if the space in front is true, then check the desired move space itself
+									if(chess.getChessPiece(moveX, moveY) == '_'){
+										chess.movePiece(pickX, pickY, moveX, moveY);
+										player[0].changeFirstStatus(chess.getPieceID(moveX, moveY));
+										valid = true;
+									}
+									else{
+										cout << "Your pawn cannot move to that coordinate, please try again" << endl;
+										valid = false;
+									}
+								}
+							}
+							else if(moveX == pickX - 1 && moveY == pickY){ //just check the space in front of the pawn
+								if(chess.getChessPiece(moveX, moveY) == '_'){
+									chess.movePiece(pickX, pickY, moveX, moveY);
+									valid = true;
+								}
+								else{
+									cout << "Your pawn cannot move to that coordinate, please try again" << endl;
+									valid = false;
+								}
+							}
+							else if(moveX == pickX - 1 && moveY == pickY - 1){ //capture enemy piece diagonally to the left
+								if(moveY < 0){
+									cout << "Your pawn cannot move to that coordinate, please try again" << endl;
+									valid = false;
+								}
+								else if(chess.getChessPiece(moveX, moveY) == '_' || chess.getPieceOfPlayer(moveX, moveY) == turnPlayer){
+									cout << "Your pawn cannot move to that coordinate, please try again" << endl;
+									valid = false;
+								}
+								else{
+									chess.capturePiece(moveX, moveY, pickX, pickY);
+									valid = true;
+								}
+							}
+							else if(moveX == pickX - 1 && moveY == pickY + 1){ //capture enemy piece diagonally to the right
+								if(moveY > 7){
+									cout << "Your pawn cannot move to that coordinate, please try again" << endl;
+									valid = false;
+								}
+								else if(chess.getChessPiece(moveX, moveY) == '_' || chess.getPieceOfPlayer(moveX, moveY) == turnPlayer){
+									cout << "Your pawn cannot move to that coordinate, please try again" << endl;
+									valid = false;
+								}
+								else{
+									chess.capturePiece(moveX, moveY, pickX, pickY);
+									valid = true;
+								}
+							}
+							else{
+								cout << "Your pawn cannot move to that coordinate, please try again" << endl;
+								valid = false;
+							}
+						}
+						else{
+							if(moveX == pickX - 1 && moveY == pickY){
+								if(chess.getChessPiece(moveX, moveY) == '_'){
+									chess.movePiece(pickX, pickY, moveX, moveY);
+									valid = true;
+								}
+								else{
+									cout << "Your pawn cannot move to that coordinate, please try again" << endl;
+									valid = false;
+								}
+							}
+							else if(moveX == pickX - 1 && moveY == pickY - 1){ //capture enemy piece diagonally to the left
+								if(moveY < 0){
+									cout << "Your pawn cannot move to that coordinate, please try again" << endl;
+									valid = false;
+								}
+								else if(chess.getChessPiece(moveX, moveY) == '_' || chess.getPieceOfPlayer(moveX, moveY) == turnPlayer){
+									cout << "Your pawn cannot move to that coordinate, please try again" << endl;
+									valid = false;
+								}
+								else{
+									chess.capturePiece(moveX, moveY, pickX, pickY);
+									valid = true;
+								}
+							}
+							else if(moveX == pickX - 1 && moveY == pickY + 1){ //capture enemy piece diagonally to the right
+								if(moveY > 7){
+									cout << "Your pawn cannot move to that coordinate, please try again" << endl;
+									valid = false;
+								}
+								else if(chess.getChessPiece(moveX, moveY) == '_' || chess.getPieceOfPlayer(moveX, moveY) == turnPlayer){
+									cout << "Your pawn cannot move to that coordinate, please try again" << endl;
+									valid = false;
+								}
+								else{
+									chess.capturePiece(moveX, moveY, pickX, pickY);
+									valid = true;
+								}
+							}
+							else{
+								cout << "Your pawn cannot move to that coordinate, please try again" << endl;
+								valid = false;
+							}
+						}
+					}
+					else{
+						if(player[1].pawnFirstMove(chess.getPieceID(pickX, pickY))){
+							if(moveX == pickX + 2 && moveY == pickY){  //check the space right in front of the pawn first
+								if(chess.getChessPiece(pickX + 1, pickY) != '_'){
+									cout << "Your pawn cannot move to that coordinate, please try again" << endl;
+									valid = false;
+								}				
+								else{
+									if(chess.getChessPiece(moveX, moveY) == '_'){
+										chess.movePiece(pickX, pickY, moveX, moveY);
+										valid = true;
+									}
+									else{
+										cout << "Your pawn cannot move to that coordinate, please try again" << endl;
+										valid = false;
+									}
+								}
+							}
+							else if(moveX == pickX + 1 && moveY == pickY){
+								if(chess.getChessPiece(moveX, moveY) == '_'){
+									chess.movePiece(pickX, pickY, moveX, moveY);
+									valid = true;
+								}
+								else{
+									cout << "Your pawn cannot move to that coordinate, please try again" << endl;
+									valid = false;
+								}
+							}
+							else if(moveX == pickX + 1 && moveY == pickY - 1){ //capture enemy piece diagonally to the left
+								if(moveY < 0){
+									cout << "Your pawn cannot move to that coordinate, please try again" << endl;
+									valid = false;
+								}
+								else if(chess.getChessPiece(moveX, moveY) == '_' || chess.getPieceOfPlayer(moveX, moveY) == turnPlayer){
+									cout << "Your pawn cannot move to that coordinate, please try again" << endl;
+									valid = false;
+								}
+								else{
+									chess.capturePiece(moveX, moveY, pickX, pickY);
+									valid = true;
+								}
+							}
+							else if(moveX == pickX + 1 && moveY == pickY + 1){ //capture enemy piece diagonally to the right
+								if(moveY > 7){
+									cout << "Your pawn cannot move to that coordinate, please try again" << endl;
+									valid = false;
+								}
+								else if(chess.getChessPiece(moveX, moveY) == '_' || chess.getPieceOfPlayer(moveX, moveY) == turnPlayer){
+									cout << "Your pawn cannot move to that coordinate, please try again" << endl;
+									valid = false;
+								}
+								else{
+									chess.capturePiece(moveX, moveY, pickX, pickY);
+									valid = true;
+								}
+							}
+							else{
+								cout << "Your pawn cannot move to that coordinate, please try again" << endl;
+								valid = false;
+							}
+						}
+						else{
+							if(moveX == pickX + 1 && moveY == pickY){
+								if(chess.getChessPiece(moveX, moveY) == '_'){
+									chess.movePiece(pickX, pickY, moveX, moveY);
+									valid = true;
+								}
+								else{
+									cout << "Your pawn cannot move to that coordinate, please try again" << endl;
+									valid = false;
+								}
+							}
+							else if(moveX == pickX + 1 && moveY == pickY - 1){ //capture enemy piece diagonally to the left
+								if(moveY < 0){
+									cout << "Your pawn cannot move to that coordinate, please try again" << endl;
+									valid = false;
+								}
+								else if(chess.getChessPiece(moveX, moveY) == '_' || chess.getPieceOfPlayer(moveX, moveY) == turnPlayer){
+									cout << "Your pawn cannot move to that coordinate, please try again" << endl;
+									valid = false;
+								}
+								else{
+									chess.capturePiece(moveX, moveY, pickX, pickY);
+									valid = true;
+								}
+							}
+							else if(moveX == pickX + 1 && moveY == pickY + 1){ //capture enemy piece diagonally to the right
+								if(moveY > 7){
+									cout << "Your pawn cannot move to that coordinate, please try again" << endl;
+									valid = false;
+								}
+								else if(chess.getChessPiece(moveX, moveY) == '_' || chess.getPieceOfPlayer(moveX, moveY) == turnPlayer){
+									cout << "Your pawn cannot move to that coordinate, please try again" << endl;
+									valid = false;
+								}
+								else{
+									chess.capturePiece(moveX, moveY, pickX, pickY);
+									valid = true;
+								}
+							}
+							else{
+								cout << "Your pawn cannot move to that coordinate, please try again" << endl;
+								valid = false;
+							}
+						}
+					}
+					break;					
+				case 'R':
+					
+					
+					break;
+				case 'B':
+					
+					
+					break;
+				case 'L':
+					valid = chess.moveKnight(turnPlayer, pickX, pickY, moveX, moveY);
+					break;
+				case 'Q':
+					
+					
+					break;
+				case 'K':
+					
+					
+					break;
+			}
 		}
 		
 		
