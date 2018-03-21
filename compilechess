@@ -1,0 +1,7 @@
+#!/bin/bash
+
+g++ *.cpp -o chess #compile all the chess files and create object called chess
+if test $? -eq 0 #if compilation is successful, then echo out a message.  Otherwise, fix the issues first
+then
+	echo "Compilation successful, run object ./chess to play the game"
+fi

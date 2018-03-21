@@ -26,6 +26,10 @@ class Player{
 		King initializeKing(int, int, int, char);
 		bool pawnFirstMove(int); //based on the id of the pawn, determine if the pawn has made its move yet
 		void changeFirstStatus(int);
+		int getCastleStatus();
+		void changeCastleStatus();
+		int getCheckStatus();
+		void changeCheckStatus(bool);
 };
 
 #endif

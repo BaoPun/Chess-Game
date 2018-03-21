@@ -1,7 +1,0 @@
-#!/bin/bash
-
-g++ *.cpp -o chess
-if test $? -eq 0
-then
-	echo "Compilation successful, run object ./chess to play the game"
-fi

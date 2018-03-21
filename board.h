@@ -23,11 +23,11 @@ class Board{
 		int getPieceID(int, int);
 		int getPieceOfPlayer(int, int);
 		char getChessPiece(int, int);
-		bool moveRook(int, int, int, int);
-		bool moveBishop(int, int, int, int);
-		bool moveKnight(int, int, int, int, int); //same thing as knightCanMove
-		bool moveQueen(int, int, int, int);
-		bool moveKing(int, int, int, int);
+		bool moveRook(int, int, int, int, int);
+		bool moveBishop(int, int, int, int, int);
+		bool moveKnight(int, int, int, int, int);
+		bool moveQueen(int, int, int, int, int);
+		bool moveKing(int, int, int, int, int);
 		
 		void movePiece(int, int, int, int);
 		void capturePiece(int, int, int, int);

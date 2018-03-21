@@ -9,7 +9,7 @@ class Pawn : public Piece{
 	public:
 		Pawn(); //4 arguments: 'P', x coordinate, y coordinate, player
 		bool firstMove();  //get pawn's current location on the board, check if it matches its starting coordinate
-		void changeFirstStatus(bool);
+		void changeFirstStatus();
 	
 };
 

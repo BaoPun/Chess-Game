@@ -10,8 +10,9 @@ class Game{
 	public:
 		Game();
 		void displayBoard();
-		int firstTurn();
-		
+		bool movePawn(int, int, int, int, int);
+		bool moveKing(int, int, int, int, int);
+		int firstTurn();		
 		void play();
 
 };

@@ -60,3 +60,23 @@ bool Player::pawnFirstMove(int i){
 void Player::changeFirstStatus(int i){
 	pawn[i - 1].changeFirstStatus();
 }
+
+int Player::getCastleStatus(){
+	return king.getCastleStatus();
+}
+
+
+void Player::changeCastleStatus(){
+	king.changeCastle();
+}
+
+
+int Player::getCheckStatus(){
+	return king.getCheckStatus();
+}
+
+
+void Player::changeCheckStatus(bool){
+	
+}
+
